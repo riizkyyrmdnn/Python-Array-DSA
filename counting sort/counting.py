@@ -1,0 +1,93 @@
+def int_counting_sort(array):
+  if not array:
+    return []
+
+  count = [0] * (max(array) + 1)
+
+  for num in array:
+    count[num] += 1
+
+  for i in range(1, len(count)):
+    count[i] += count[i - 1]
+
+  output = [0] * len(array)
+  for num in reversed(array):
+    count[num] -= 1
+    output[count[num]] = num
+
+  return output
+
+def float_counting_sort(array):
+   if not array:
+      return []
+   
+   factor = 10 ** 3
+   int_array = [int(i * factor) for i in array]
+
+   sorted_int_array = int_counting_sort(int_array)
+   return [i / factor for i in sorted_int_array]
+
+def string_counting_sort(array):
+    if not array:
+        return []
+
+    str_array = [str(char) for char in array]
+    
+    maxlength = max(len(char) for char in str_array)
+    padding_array = [char.ljust(maxlength, chr(0)) for char in str_array]
+    
+    def sorting_char(array, index):
+        maxvalue = 255
+        count = [0] * (maxvalue + 1)
+        output = [0] * len(array)
+        
+        for char in array:
+            count[ord(char[index])] += 1
+        
+        for i in range(1, len(count)):
+            count[i] += count[i - 1]
+        
+        for char in reversed(array):
+            output[count[ord(char[index])] - 1] = char
+            count[ord(char[index])] -= 1
+        
+        return output
+
+    for i in reversed(range(maxlength)):
+        padding_array = sorting_char(padding_array, i)
+    
+    sorted_array = [char.rstrip(chr(0)) for char in padding_array]
+    
+    return [int(char) if char.isdigit() else char for char in sorted_array]
+
+def switch(choice):
+    if choice == 1:
+        print("__Sorting array integer__")
+        int_array = [88, 91, 54, 61, 73, 81, 65, 71, 90, 99, 64, 83, 85, 61, 46, 29, 11, 28, 12, 71, 83, 32, 64, 97, 17, 25, 16, 89]
+        print(f"Before sort: {int_array}")
+        print(f"After sort: {int_counting_sort(int_array)}")
+    elif choice == 2:
+        print("__Sorting array float__")
+        float_array = [8.4, 9.1, 3.9, 8.2, 4.89, 1.25, 1.8, 9.87, 7.68, 96.51, 78.8, 6.1, 6.8, 1.09, 4.2, 9.91, 10.0, 1.3, 2.8, 3.9, 1.1, 8.56, 7.12]
+        print(f"Before sort: {float_array}")
+        print(f"After sort: {float_counting_sort(float_array)}")
+    elif choice == 3:
+        print("__Sorting array string__")
+        string_array = ["hello", "you", "string", "int", "double", "unsigned", "floating", "float", "array", "long", "world", "classes", "enumirate", "byte"]
+        print(f"Before sort: {string_array}")
+        print(f"After sort: {string_counting_sort(string_array)}")
+    else:
+        print("0. Close program\n")
+
+
+if __name__ == "__main__":
+    print("___ Counting Sort ___")
+    print("1. Sorting array integer")
+    print("2. Sorting array float")
+    print("3. Sorting array string")
+    print("0. Close program\n")
+
+    choice = int(input("> Your choice: "))
+
+    print(f"\nYour choice is: {choice}")
+    switch(choice)
